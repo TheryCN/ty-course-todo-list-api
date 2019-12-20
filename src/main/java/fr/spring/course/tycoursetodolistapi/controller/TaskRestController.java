@@ -1,5 +1,6 @@
 package fr.spring.course.tycoursetodolistapi.controller;
 
+import fr.spring.course.tycoursetodolistapi.aop.LogEachCall;
 import fr.spring.course.tycoursetodolistapi.entity.Task;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import java.util.List;
 public class TaskRestController {
 
     @GetMapping
+    @LogEachCall
     public ResponseEntity<List<Task>> getTasks() {
         return ResponseEntity.ok(Arrays.asList(new Task(1, "Work")));
     }
