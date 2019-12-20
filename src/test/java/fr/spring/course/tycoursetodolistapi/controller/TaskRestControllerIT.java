@@ -1,5 +1,6 @@
 package fr.spring.course.tycoursetodolistapi.controller;
 
+import fr.spring.course.tycoursetodolistapi.dto.TaskDto;
 import fr.spring.course.tycoursetodolistapi.entity.Task;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,12 +26,12 @@ class TaskRestControllerIT {
     @Test
     void whenGetTasks_thenReturnWorkTaskOnly() {
         // Given
-        Task expectedTask = new Task(1, "Work");
-        ParameterizedTypeReference<List<Task>> parameterizedTypeReference = new ParameterizedTypeReference<List<Task>>() {
+        TaskDto expectedTask = new TaskDto(1, "Work", null, null, null, null);
+        ParameterizedTypeReference<List<TaskDto>> parameterizedTypeReference = new ParameterizedTypeReference<List<TaskDto>>() {
         };
 
         // When
-        ResponseEntity<List<Task>> responseEntity = testRestTemplate.exchange("/tasks", HttpMethod.GET,
+        ResponseEntity<List<TaskDto>> responseEntity = testRestTemplate.exchange("/tasks", HttpMethod.GET,
                 new HttpEntity<Object>(createHeaders("Thery","ChangeIt")), parameterizedTypeReference);
 
         // Then

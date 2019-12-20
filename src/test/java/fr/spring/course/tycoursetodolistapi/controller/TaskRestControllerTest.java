@@ -1,5 +1,6 @@
 package fr.spring.course.tycoursetodolistapi.controller;
 
+import fr.spring.course.tycoursetodolistapi.dto.TaskDto;
 import fr.spring.course.tycoursetodolistapi.entity.Task;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,10 +23,10 @@ class TaskRestControllerTest {
     @Test
     void whenGetTasks_thenReturnWorkTaskOnly() {
         // Given
-        Task expectedTask = new Task(1, "Work");
+        TaskDto expectedTask = new TaskDto(1, "Work",null, null, null, null);
 
         // When
-        ResponseEntity<List<Task>> responseEntity = taskRestController.getTasks();
+        ResponseEntity<List<TaskDto>> responseEntity = taskRestController.getTasks();
 
         // Then
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
