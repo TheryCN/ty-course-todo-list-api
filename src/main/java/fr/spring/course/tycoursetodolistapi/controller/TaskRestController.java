@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Task Rest Controller.
+ */
 @RestController
 @RequestMapping("/tasks")
 public class TaskRestController {
