@@ -3,26 +3,24 @@ package fr.spring.course.tycoursetodolistapi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.provisioning.InMemoryUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+
+import java.util.List;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${security.username}")
-    private String username;
+    @Value("#{'${security.usernames}'.split(',')}")
+    private List<String> usernameList;
 
-    @Value("${security.password}")
-    private String password;
+    @Value("${security.default.password}")
+    private String defaultPassword;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -31,22 +29,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // All APIs required authentication
         http.authorizeRequests()
-                .anyRequest().authenticated()
+                .antMatchers("/tasks").hasAnyRole(RoleType.USER.name(), RoleType.ADMIN.name())
+                .anyRequest().hasRole(RoleType.ADMIN.name())
                 .and().httpBasic()
                 .and().csrf().disable();
     }
 
-    @Bean
     @Override
-    public UserDetailsService userDetailsService() {
-        // Init default in memory UserService;
-        UserDetails user =
-                User.withDefaultPasswordEncoder()
-                        .username(username)
-                        .password(password)
-                        .roles("USER")
-                        .build();
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> inMemoryUserDetailsManagerConfigurer = auth.inMemoryAuthentication();
 
-        return new InMemoryUserDetailsManager(user);
+        // Set user details service manually
+        // auth.userDetailsService(myUserDetailsService);
+
+        inMemoryUserDetailsManagerConfigurer
+                .withUser("Thery")
+                .password(passwordEncoder().encode(defaultPassword)).roles(RoleType.ADMIN.name());
+
+        usernameList.forEach(username -> inMemoryUserDetailsManagerConfigurer
+                .withUser(username)
+                .password(passwordEncoder().encode(defaultPassword)).roles(RoleType.USER.name()));
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 }
