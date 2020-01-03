@@ -3,14 +3,22 @@
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.4.1/css/bootstrap.min.css}"/>
 </head>
 <body>
-<table>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Tasks</li>
+    </ol>
+</nav>
+
+<table class="table">
     <thead>
     <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Description</th>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
     </tr>
     </thead>
     <tbody>
@@ -24,5 +32,7 @@
     </tr>
     </tbody>
 </table>
+
+<script th:src="@{/webjars/bootstrap/4.4.1/js/bootstrap.min.js}"></script>
 </body>
 </html>
