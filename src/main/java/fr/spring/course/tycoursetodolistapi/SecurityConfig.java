@@ -29,7 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // All APIs required authentication
         http.authorizeRequests()
-                .antMatchers("/tasks").hasAnyRole(RoleType.USER.name(), RoleType.ADMIN.name())
+                .antMatchers("/ui/tasks").permitAll()
+                .antMatchers("/tasks").permitAll()
                 .anyRequest().hasRole(RoleType.ADMIN.name())
                 .and().httpBasic()
                 .and().csrf().disable();
